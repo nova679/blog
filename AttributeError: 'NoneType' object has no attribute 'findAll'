@@ -1,0 +1,21 @@
+import bs4 as bs
+import pickle
+import requests
+import tushare as findAll
+
+def find_and_save_CSI_300():
+    response=requests.get('https://en.wikipedia.org/wiki/CSI_300_Index')
+    soup = bs.BeautifulSoup(response.text,'lxml')
+    table = soup.find('tadle',{'class':'wikitable sortable'})
+    tickers = []
+    for row in table.findAll('tr')[1:]:
+        ticker = row.findAll('td')[0].text
+        ticker = ticker[:6]
+        tickers.append(ticker)
+        
+    with open("CSI_tickers.pickle","wb") as f:
+        pickle.dump(tickers,f)
+    print(tickers)
+    return tickers
+
+find_and_save_CSI_300()
